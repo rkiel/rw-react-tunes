@@ -1,24 +1,64 @@
 var React = require('react');
 var $ = require('jquery');
 
-var SearchItunes = React.createClass({
-  render: function(){
-    return (
-      <div className="row">
-        <div className="col-sm-12">
-          <div className="input-group-inline col-sm-4">
-            /* 'search' input field goes here */
-          </div>
-          <div className="input-group-inline col-sm-4">
-            /* 'entity' select tag goes here */
-          </div>
-          <div className="input-group-inline col-sm-4">
-            /*handleSubmit button goes here*/
-          </div>
+function propTypes() {
+  return {
+    cb: React.PropTypes.func.isRequired
+  };
+}
+
+function formatURL() {
+  var searchInput = this.refs.searchInput.getDOMNode().value;
+  var selectInput = this.refs.selectInput.getDOMNode().value;
+  var params = [];
+  params.push('term='+searchInput);
+  params.push('entity='+selectInput);
+  return 'https://itunes.apple.com/search?'+params.joins('&');
+}
+
+function handleSubmit() {
+  $.ajax({
+    url:  this.formatURL(),
+    type: 'JSONP',
+    error: function() {
+      console.log('error on post');
+    },
+    success: function(results) {
+      this.props.cb(results);
+      this.refs.searchInput.getDOMNode().value = '';
+    }.bind(this)
+  })
+}
+
+function render(){
+  return (
+    <div className="row">
+      <div className="col-sm-12">
+        <div className="input-group-inline col-sm-4">
+          <input
+           type='text'
+           ref='searchInput'
+           className='form-control'
+          />
+        </div>
+        <div className="input-group-inline col-sm-4">
+          <select ref='selectInput' className='form-control'>
+            <option value='musicTrack'>Music</option>
+            <option value='movie'>Movie</option>
+          </select>
+        </div>
+        <div className="input-group-inline col-sm-4">
+          <button onClick={this.handleSubmit} className='btn btn-default'> Search </button>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+var SearchItunes = React.createClass({
+  propTypes: propTypes(),
+  formatURL: formatURL,
+  render:    render
 });
 
 module.exports = SearchItunes;
