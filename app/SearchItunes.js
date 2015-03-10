@@ -13,18 +13,19 @@ function formatURL() {
   var params = [];
   params.push('term='+searchInput);
   params.push('entity='+selectInput);
-  return 'https://itunes.apple.com/search?'+params.joins('&');
+  return 'https://itunes.apple.com/search?'+params.join('&');
 }
 
 function handleSubmit() {
   $.ajax({
     url:  this.formatURL(),
-    type: 'JSONP',
+    dataType: 'jsonp',
     error: function() {
       console.log('error on post');
     },
-    success: function(results) {
-      this.props.cb(results);
+    success: function(data) {
+      console.log('success');
+      this.props.cb(data.results);
       this.refs.searchInput.getDOMNode().value = '';
     }.bind(this)
   })
@@ -57,6 +58,7 @@ function render(){
 
 var SearchItunes = React.createClass({
   propTypes: propTypes(),
+    handleSubmit: handleSubmit,
   formatURL: formatURL,
   render:    render
 });
