@@ -57,10 +57,10 @@ function render(){
 }
 
 var SearchItunes = React.createClass({
-  propTypes: propTypes(),
-    handleSubmit: handleSubmit,
-  formatURL: formatURL,
-  render:    render
+  propTypes:    propTypes(),
+  handleSubmit: handleSubmit,
+  formatURL:    formatURL,
+  render:       render
 });
 
 module.exports = SearchItunes;
